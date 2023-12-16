@@ -118,7 +118,7 @@ namespace TicTacToe
             {
                 Action GameOver = (game.Winner, game.Tie) switch
                 {
-                    (true, _) => () => game.winnerCells.ForEach(cell => gameBoardCells[cell.X, cell.Y].BackColor = Color.Chartreuse),
+                    (true, _) => () => game.WinnerCells.ForEach(cell => gameBoardCells[cell.X, cell.Y].BackColor = Color.Chartreuse),
                     _ => () =>
                     {
                         foreach (PictureBox item in gameBoardCells)
@@ -132,7 +132,7 @@ namespace TicTacToe
                     item.Enabled = false;
 
                 await Task.Delay(1000);
-
+                
                 NewGame();
             }
 
@@ -147,16 +147,16 @@ namespace TicTacToe
             {
                 for (int j = 0; j < gameBoardCells.GetLength(1); j++)
                 {
-                    switch (game.gameBoard[i, j])
+                    switch (game.GameBoard[i, j])
                     {
-                        case Game.GameBoard.Empty:
+                        case Game.GameState.Empty:
                             gameBoardCells[i, j].Image = null;
                             break;
-                        case Game.GameBoard.X:
+                        case Game.GameState.X:
                             gameBoardCells[i, j].Image = images[1];
                             gameBoardCells[i, j].Cursor = Cursors.No;
                             break;
-                        case Game.GameBoard.O:
+                        case Game.GameState.O:
                             gameBoardCells[i, j].Image = images[2];
                             gameBoardCells[i, j].Cursor = Cursors.No;
                             break;

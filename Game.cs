@@ -2,48 +2,48 @@
 {
     class Game(bool aiOpponent = false, bool aiTurn = false)
     {
-        public enum GameBoard
+        public enum GameState
         {
             Empty,
             X,
             O
         }
 
-        public GameBoard[,] gameBoard = new GameBoard[3, 3];
-        public List<Point> winnerCells = new(3);
-        public bool Winner { get; set; }
-        public bool CurrentPlayer { get; set; }
-        public bool Tie { get; set; }
-        public bool AIOpponent { get; set; } = aiOpponent;
-        public bool AITurn { get; set; } = aiTurn;
+        public GameState[,] GameBoard { get; private set; } = new GameState[3, 3];
+        public List<Point> WinnerCells { get; private set; } = new(3);
+        public bool Winner { get; private set; }
+        public bool CurrentPlayer { get; private set; }
+        public bool Tie { get; private set; }
+        public bool AIOpponent { get; private set; } = aiOpponent;
+        public bool AITurn { get; private set; } = aiTurn;
 
         public void MakeAMove(Point p)
         {
-            if (gameBoard[p.X, p.Y] is not GameBoard.Empty)
+            if (GameBoard[p.X, p.Y] is not GameState.Empty)
                 return;
 
-            gameBoard[p.X, p.Y] = CurrentPlayer ? GameBoard.O : GameBoard.X;
-            Winner = CheckWinner(GameBoard.X) || CheckWinner(GameBoard.O);
-            Tie = IsBoardFull(gameBoard) && !Winner;
+            GameBoard[p.X, p.Y] = CurrentPlayer ? GameState.O : GameState.X;
+            Winner = CheckWinner(GameState.X) || CheckWinner(GameState.O);
+            Tie = IsBoardFull(GameBoard) && !Winner;
             CurrentPlayer = !CurrentPlayer;
             AITurn = !AITurn;
         }
 
         public void AIMove()
         {
-            GameBoard playerState, opponentState;
-            (playerState, opponentState) = CurrentPlayer ? (GameBoard.O, GameBoard.X) : (GameBoard.X, GameBoard.O);
-            Point bestMove = GetBestMove(gameBoard, playerState, opponentState);
-            gameBoard[bestMove.X, bestMove.Y] = playerState;
-            Winner = CheckWinner(GameBoard.X) || CheckWinner(GameBoard.O);
-            Tie = IsBoardFull(gameBoard) && !Winner;
+            GameState playerState, opponentState;
+            (playerState, opponentState) = CurrentPlayer ? (GameState.O, GameState.X) : (GameState.X, GameState.O);
+            Point bestMove = GetBestMove(GameBoard, playerState, opponentState);
+            GameBoard[bestMove.X, bestMove.Y] = playerState;
+            Winner = CheckWinner(GameState.X) || CheckWinner(GameState.O);
+            Tie = IsBoardFull(GameBoard) && !Winner;
             CurrentPlayer = !CurrentPlayer;
             AITurn = !AITurn;
         }
 
-        bool CheckWinner(GameBoard state)
+        bool CheckWinner(GameState state)
         {
-            int size = gameBoard.GetLength(0);
+            int size = GameBoard.GetLength(0);
 
             for (int i = 0; i < size; i++)
             {
@@ -52,20 +52,20 @@
 
                 for (int j = 0; j < size; j++)
                 {
-                    if (gameBoard[i, j] == state)
+                    if (GameBoard[i, j] == state)
                         row.Add(new Point(i, j));
-                    if (gameBoard[j, i] == state)
+                    if (GameBoard[j, i] == state)
                         col.Add(new Point(j, i));
                 }
 
                 if (row.Count == size)
                 {
-                    winnerCells = row;
+                    WinnerCells = row;
                     return true;
                 }
                 else if (col.Count == size)
                 {
-                    winnerCells = col;
+                    WinnerCells = col;
                     return true;
                 }
             }
@@ -75,19 +75,19 @@
 
             for (int i = 0; i < size; i++)
             {
-                if (gameBoard[i, i] == state)
+                if (GameBoard[i, i] == state)
                     principal.Add(new Point(i, i));
-                if (gameBoard[i, size - i - 1] == state)
+                if (GameBoard[i, size - i - 1] == state)
                     secondary.Add(new Point(i, size - i - 1));
 
                 if (principal.Count == size)
                 {
-                    winnerCells = principal;
+                    WinnerCells = principal;
                     return true;
                 }
                 else if (secondary.Count == size)
                 {
-                    winnerCells = secondary;
+                    WinnerCells = secondary;
                     return true;
                 }
             }
@@ -95,7 +95,7 @@
             return false;
         }
 
-        Point GetBestMove(GameBoard[,] board, GameBoard player, GameBoard opponent)
+        Point GetBestMove(GameState[,] board, GameState player, GameState opponent)
         {
             int bestScore = int.MinValue;
             Point bestMove = new();
@@ -106,11 +106,11 @@
             {
                 for (int j = 0; j < board.GetLongLength(1); j++)
                 {
-                    if (board[i, j] == GameBoard.Empty)
+                    if (board[i, j] == GameState.Empty)
                     {
                         board[i, j] = player;
                         int score = MiniMax(board, 0, false, player, opponent, alpha, beta);
-                        board[i, j] = GameBoard.Empty;
+                        board[i, j] = GameState.Empty;
 
                         if (score > bestScore)
                         {
@@ -128,7 +128,7 @@
             return bestMove;
         }
 
-        int MiniMax(GameBoard[,] board, int depth, bool isMaximizing, GameBoard player, GameBoard opponent, int alpha, int beta)
+        int MiniMax(GameState[,] board, int depth, bool isMaximizing, GameState player, GameState opponent, int alpha, int beta)
         {
             if (CheckWinner(player))
                 return 10 - depth;
@@ -145,11 +145,11 @@
                 {
                     for (int j = 0; j < board.GetLongLength(1); j++)
                     {
-                        if (board[i, j] == GameBoard.Empty)
+                        if (board[i, j] == GameState.Empty)
                         {
                             board[i, j] = player;
                             int score = MiniMax(board, depth + 1, false, player, opponent, alpha, beta);
-                            board[i, j] = GameBoard.Empty;
+                            board[i, j] = GameState.Empty;
                             bestScore = Math.Max(score, bestScore);
 
                             alpha = Math.Max(alpha, bestScore);
@@ -169,11 +169,11 @@
                 {
                     for (int j = 0; j < board.GetLongLength(1); j++)
                     {
-                        if (board[i, j] == GameBoard.Empty)
+                        if (board[i, j] == GameState.Empty)
                         {
                             board[i, j] = opponent;
                             int score = MiniMax(board, depth + 1, true, player, opponent, alpha, beta);
-                            board[i, j] = GameBoard.Empty;
+                            board[i, j] = GameState.Empty;
                             bestScore = Math.Min(score, bestScore);
 
                             beta = Math.Min(beta, bestScore);
@@ -187,10 +187,10 @@
             }
         }
 
-        static bool IsBoardFull(GameBoard[,] gameBoard)
+        static bool IsBoardFull(GameState[,] gameBoard)
         {
-            foreach (GameBoard item in gameBoard)
-                if (item is GameBoard.Empty)
+            foreach (GameState item in gameBoard)
+                if (item is GameState.Empty)
                     return false;
 
             return true;
