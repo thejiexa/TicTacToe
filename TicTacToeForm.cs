@@ -30,9 +30,9 @@ namespace TicTacToe
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = Icon.ExtractAssociatedIcon(@"../../../images/icon.ico");
-            MinimizeBox = MaximizeBox = false;
+            MaximizeBox = false;
             BackColor = Color.LightSkyBlue;
-            Size = new Size(pbSize.Width * 4 + pbSize.Width / 2, pbSize.Height * 3 + pbSize.Height / 3 + 5);
+            Size = new Size(pbSize.Width * 5 - pbSize.Width / 2, pbSize.Height * 3 + pbSize.Height / 3 + 5);
             Text = "Tic-Tac-Toe";
         }
 
@@ -56,20 +56,16 @@ namespace TicTacToe
                 }
             }
 
-            pvePb.Location = new Point(pvePb.Location.X + pbSize.Width * 3 + 50, pvePb.Location.Y + 15);
-            xRb.Location = new Point(xRb.Location.X + pbSize.Width * 3 + 70, xRb.Location.Y + 90);
-            oRb.Location = new Point(oRb.Location.X + pbSize.Width * 3 + 70, oRb.Location.Y + 140);
-            pvpRb.Location = new Point(pvpRb.Location.X + pbSize.Width * 3 + 50, pvpRb.Location.Y + 170);
-            nextMovePb.Location = new Point(nextMovePb.Location.X + pbSize.Width + 330, nextMovePb.Location.Y + 350);
-            restartPb.Location = new Point(restartPb.Location.X + pbSize.Width + 420, restartPb.Location.Y + 350);
+            pvePb.Location = new Point(pvePb.Location.X + pbSize.Width * 3 + 30, pvePb.Location.Y);
+            xRb.Location = new Point(xRb.Location.X + pbSize.Width * 3 + 70, xRb.Location.Y + 100);
+            oRb.Location = new Point(oRb.Location.X + pbSize.Width * 3 + 70, oRb.Location.Y + 155);
+            pvpRb.Location = new Point(pvpRb.Location.X + pbSize.Width * 3 + 30, pvpRb.Location.Y + 195);
+            nextMovePb.Location = new Point(nextMovePb.Location.X + pbSize.Width * 3 + 30, nextMovePb.Location.Y + 370);
+            restartPb.Location = new Point(restartPb.Location.X + pbSize.Width * 4 - 30, restartPb.Location.Y + 370);
 
-            restartPb.SizeMode =
-            nextMovePb.SizeMode = PictureBoxSizeMode.StretchImage;
+            restartPb.SizeMode = nextMovePb.SizeMode = PictureBoxSizeMode.StretchImage;
             pvePb.SizeMode = PictureBoxSizeMode.Zoom;
-
-            xRb.BackgroundImageLayout =
-            oRb.BackgroundImageLayout =
-            pvpRb.BackgroundImageLayout = ImageLayout.Zoom;
+            xRb.BackgroundImageLayout = oRb.BackgroundImageLayout = pvpRb.BackgroundImageLayout = ImageLayout.Zoom;
 
             xRb.BackgroundImage = images[1];
             oRb.BackgroundImage = images[2];
@@ -77,18 +73,15 @@ namespace TicTacToe
             restartPb.Image = images[5];
             pvePb.Image = images[3];
 
+            xRb.Cursor = oRb.Cursor = pvpRb.Cursor = restartPb.Cursor = Cursors.Hand;
+
             pvePb.Size = new Size(70, 70);
-            nextMovePb.Size =
-            restartPb.Size = new Size(60, 60);
+            nextMovePb.Size = restartPb.Size = new Size(60, 60);
 
-            pvpRb.Height = 70;
-            pvePb.Width =
-            pvpRb.Width = 100;
-
-            xRb.Height =
-            oRb.Height = 30;
-            xRb.Width =
-            oRb.Width = 70;
+            pvpRb.Height = pvePb.Height = 100;
+            pvePb.Width = pvpRb.Width = 150;
+            xRb.Height = oRb.Height = 40;
+            xRb.Width = oRb.Width = 80;
 
             xRb.Checked = true;
 
